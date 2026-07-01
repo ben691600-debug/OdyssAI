@@ -1,71 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>OdyssAI Prototype</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OdyssAI Prototype v4</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <section id="splash" class="screen active">
-    <img src="odyssai-splash.png" alt="OdyssAI" />
-  </section>
+<section id="splash" class="screen active"><div class="splash-frame"><img src="odyssai-splash.png" alt="OdyssAI"></div></section>
 
-  <section id="languageScreen" class="screen">
-    <div class="top">
-      <h1>Choose your language</h1>
-      <p>Glissez sur les côtés, puis choisissez.</p>
-    </div>
+<section id="languageScreen" class="screen">
+  <div class="top"><h1 id="langTitle">Choisir la langue</h1><p id="langSubtitle">Faites glisser les drapeaux, puis continuez.</p></div>
+  <div class="carousel-wrap"><div class="language-carousel" id="languageCarousel">
+    <button class="language" data-lang="fr"><div class="flag">🇫🇷</div><strong>Français</strong></button>
+    <button class="language" data-lang="he"><div class="flag">🇮🇱</div><strong>עברית</strong></button>
+    <button class="language" data-lang="en"><div class="flag">🇬🇧</div><strong>English</strong></button>
+    <button class="language" data-lang="es"><div class="flag">🇪🇸</div><strong>Español</strong></button>
+    <button class="language" data-lang="it"><div class="flag">🇮🇹</div><strong>Italiano</strong></button>
+    <button class="language" data-lang="de"><div class="flag">🇩🇪</div><strong>Deutsch</strong></button>
+  </div></div>
+  <button id="continueBtn" class="primary" onclick="confirmLanguage()">Continuer</button>
+</section>
 
-    <div class="language-carousel">
-      <button class="language selected" data-lang="fr"><div class="flag">🇫🇷</div><strong>Français</strong></button>
-      <button class="language" data-lang="he"><div class="flag">🇮🇱</div><strong>עברית</strong></button>
-      <button class="language" data-lang="en"><div class="flag">🇬🇧</div><strong>English</strong></button>
-      <button class="language" data-lang="es"><div class="flag">🇪🇸</div><strong>Español</strong></button>
-      <button class="language" data-lang="it"><div class="flag">🇮🇹</div><strong>Italiano</strong></button>
-      <button class="language" data-lang="de"><div class="flag">🇩🇪</div><strong>Deutsch</strong></button>
-    </div>
+<section id="permissionScreen" class="screen">
+  <div class="permission-card">
+    <div class="permission-icon">📍</div>
+    <h2 id="gpsTitle">Autoriser la localisation</h2>
+    <p id="gpsText">OdyssAI utilise votre position pour afficher les activités proches de vous et organiser votre voyage.</p>
+    <button id="gpsAllowBtn" class="primary" onclick="requestLocation()">Autoriser la localisation</button>
+    <button id="gpsSkipBtn" class="secondary" onclick="openApp(false)">Continuer sans GPS</button>
+  </div>
+</section>
 
-    <button class="primary" onclick="confirmLanguage()">Continuer</button>
-  </section>
-
-  <section id="permissionScreen" class="screen">
-    <div class="permission-card">
-      <div class="permission-icon">📍</div>
-      <h2>Autoriser la localisation</h2>
-      <p>OdyssAI utilise votre position pour afficher les activités proches de vous et organiser votre voyage.</p>
-      <button class="primary" onclick="requestLocation()">Autoriser la localisation</button>
-      <button class="secondary" onclick="openApp(false)">Continuer sans GPS</button>
-    </div>
-  </section>
-
-  <section id="appScreen" class="screen">
-    <header class="app-header">
-      <div>
-        <h2>Odyss<span>AI</span></h2>
-        <p id="locationText">Position en attente...</p>
-      </div>
-      <button class="round" onclick="restart()">↻</button>
-    </header>
-
-    <div class="map">
-      <div class="grid"></div>
-      <div class="user-pin">📍</div>
-      <div class="activity a1">🍝</div>
-      <div class="activity a2">🏛️</div>
-      <div class="activity a3">☕</div>
-      <div class="activity a4">🎟️</div>
-      <div class="map-label">Carte en direct · activités autour de vous</div>
-    </div>
-
-    <main class="content">
-      <h3>Autour de vous</h3>
-      <article class="place"><div>🍝</div><section><h4>Restaurant bien noté</h4><p>À 450 m · estimé 22 €/personne</p></section><button>Voir</button></article>
-      <article class="place"><div>🏛️</div><section><h4>Lieu à visiter</h4><p>À 900 m · gratuit · 45 min</p></section><button>Ajouter</button></article>
-      <article class="place"><div>☕</div><section><h4>Pause café</h4><p>À 300 m · ouvert maintenant</p></section><button>Voir</button></article>
-    </main>
-  </section>
-
-  <script src="script.js"></script>
+<section id="appScreen" class="screen">
+  <header class="app-header"><div><h2>Odyss<span>AI</span></h2><p id="locationText">Position en attente...</p></div><button class="round" onclick="restart()">↻</button></header>
+  <div class="map">
+    <div class="grid"></div><div class="user-pin">📍</div>
+    <div class="activity a1">🍝</div><div class="activity a2">🏛️</div><div class="activity a3">☕</div><div class="activity a4">🎟️</div>
+    <div class="map-label" id="mapLabel">Carte en direct · activités autour de vous</div>
+  </div>
+  <main class="content">
+    <h3 id="nearTitle">Autour de vous</h3>
+    <article class="place"><div>🍝</div><section><h4 id="place1Title">Restaurant bien noté</h4><p id="place1Text">À 450 m · estimé 22 €/personne</p></section><button id="place1Btn">Voir</button></article>
+    <article class="place"><div>🏛️</div><section><h4 id="place2Title">Lieu à visiter</h4><p id="place2Text">À 900 m · gratuit · 45 min</p></section><button id="place2Btn">Ajouter</button></article>
+    <article class="place"><div>☕</div><section><h4 id="place3Title">Pause café</h4><p id="place3Text">À 300 m · ouvert maintenant</p></section><button id="place3Btn">Voir</button></article>
+  </main>
+</section>
+<script src="script.js"></script>
 </body>
 </html>

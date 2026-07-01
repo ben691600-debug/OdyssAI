@@ -8,6 +8,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <style>
   :root{
@@ -28,59 +29,84 @@
     background:var(--bg); color:var(--text); min-height:100vh;
     -webkit-tap-highlight-color:transparent;
   }
-  .view{ display:none; padding:24px 20px 100px; max-width:520px; margin:0 auto; animation:fadeIn .25s ease; }
-  .view.active{ display:block; }
-  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
 
   header.app-header{
-    display:flex; align-items:center; gap:12px; padding:18px 20px;
+    display:flex; align-items:center; gap:12px; padding:16px 20px;
     border-bottom:1px solid var(--border);
   }
-  header.app-header img{ width:36px; height:36px; border-radius:9px; }
-  header.app-header .brand{ font-size:20px; font-weight:700; }
+  header.app-header img{ width:34px; height:34px; border-radius:9px; }
+  header.app-header .brand{ font-size:19px; font-weight:700; }
   header.app-header .brand span{
     background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
   }
 
-  h1{ font-size:24px; margin:0 0 6px; }
-  h2{ font-size:18px; margin:0 0 14px; color:var(--text); }
-  p.sub{ color:var(--text-muted); margin:0 0 28px; font-size:14px; line-height:1.5; }
+  main{ padding:16px 16px 60px; max-width:560px; margin:0 auto; }
 
-  label{ display:block; font-size:13px; color:var(--text-muted); margin:18px 0 6px; }
-  input, .field-btn{
-    width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--border);
-    background:var(--bg-elevated); color:var(--text); font-size:16px; outline:none;
+  /* Catégories */
+  .chips{ display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; }
+  .chip{
+    flex:0 0 auto; display:flex; align-items:center; gap:6px;
+    padding:10px 16px; border-radius:20px; border:1px solid var(--border);
+    background:var(--bg-elevated); color:var(--text-muted); font-size:14px; font-weight:600;
+    cursor:pointer; white-space:nowrap;
   }
-  input:focus{ border-color:var(--blue); }
-  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .chip.active{ background:var(--gradient); color:#fff; border-color:transparent; }
 
-  .btn-primary{
-    width:100%; padding:16px; border:none; border-radius:14px; margin-top:28px;
-    background:var(--gradient); color:#fff; font-size:16px; font-weight:600;
-    cursor:pointer;
+  /* Budget */
+  .budget-row{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .budget-row input{
+    flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+    background:var(--bg-elevated); color:var(--text); font-size:15px; outline:none;
   }
-  .btn-primary:active{ opacity:.85; }
-  .btn-secondary{
-    width:100%; padding:14px; border-radius:14px; margin-top:10px;
-    background:transparent; border:1px solid var(--border); color:var(--text-muted);
-    font-size:15px; cursor:pointer;
-  }
+  .budget-row input:focus{ border-color:var(--blue); }
+  .budget-row label{ font-size:13px; color:var(--text-muted); white-space:nowrap; }
 
-  .card{
-    background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px;
-    padding:18px; margin-bottom:14px;
-  }
-  .card .label{ font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; }
-  .card .value{ font-size:17px; font-weight:600; margin-top:4px; }
-
-  .badge{
-    display:inline-block; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;
-    background:rgba(74,125,255,.15); color:var(--blue); margin-bottom:16px;
+  /* Carte */
+  #map{
+    width:100%; height:220px; border-radius:16px; overflow:hidden;
+    border:1px solid var(--border); margin-bottom:14px; background:var(--bg-elevated);
   }
 
-  .placeholder-box{
-    border:1px dashed var(--border); border-radius:16px; padding:28px 20px; text-align:center;
-    color:var(--text-muted); font-size:14px; line-height:1.6;
+  /* État / permission */
+  .state-box{
+    border:1px dashed var(--border); border-radius:16px; padding:26px 20px; text-align:center;
+    color:var(--text-muted); font-size:14px; line-height:1.6; margin-bottom:14px;
+  }
+  .state-box button{
+    margin-top:14px; padding:12px 22px; border:none; border-radius:12px;
+    background:var(--gradient); color:#fff; font-size:14px; font-weight:600; cursor:pointer;
+  }
+
+  /* Conseil IA */
+  .advice-card{
+    border-radius:16px; padding:16px; margin-bottom:16px;
+    background:linear-gradient(135deg, rgba(74,125,255,.14), rgba(155,107,255,.14));
+    border:1px solid rgba(155,107,255,.3);
+  }
+  .advice-card .advice-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--purple);
+    font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:6px;
+  }
+  .advice-card p{ margin:0; font-size:14px; line-height:1.55; color:var(--text); }
+
+  /* Liste des lieux */
+  h2.section-title{ font-size:15px; color:var(--text-muted); margin:0 0 10px; font-weight:600; }
+  .place-list{ display:flex; flex-direction:column; gap:10px; }
+  .place-card{
+    display:flex; gap:12px; align-items:center; padding:12px; border-radius:14px;
+    background:var(--bg-elevated); border:1px solid var(--border);
+  }
+  .place-thumb{
+    width:56px; height:56px; border-radius:12px; flex:0 0 56px;
+    display:flex; align-items:center; justify-content:center; font-size:24px;
+    background:var(--gradient);
+  }
+  .place-info{ flex:1; min-width:0; }
+  .place-name{ font-size:15px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .place-meta{ font-size:12.5px; color:var(--text-muted); margin-top:2px; }
+  .place-best{
+    font-size:10px; font-weight:700; color:var(--success); text-transform:uppercase;
+    letter-spacing:.5px; margin-top:2px;
   }
 
   .sync-banner{
@@ -102,7 +128,7 @@
     display:block; border-radius:50%; object-fit:cover;
     box-shadow:0 10px 40px rgba(11,15,42,.18);
     opacity:0;
-    animation:splashFadeIn 2.5s ease forwards;
+    animation:splashFadeIn 4s ease forwards;
   }
   @keyframes splashFadeIn{ to{ opacity:1; } }
 </style>
@@ -120,76 +146,38 @@
   <div class="brand">Odyss<span>AI</span></div>
 </header>
 
-<!-- VUE 1 : Créer un voyage -->
-<div id="viewTrip" class="view active">
-  <div class="badge">Nouveau voyage</div>
-  <h1>Où partez-vous ?</h1>
-  <p class="sub">Renseignez les infos de base de votre séjour. On s'occupera ensuite de tout organiser autour.</p>
-
-  <label for="tripDeparture">Ville de départ</label>
-  <input id="tripDeparture" type="text" placeholder="Ex: Paris, France">
-
-  <label for="tripHotel">Lieu du séjour (hôtel / adresse exacte)</label>
-  <input id="tripHotel" type="text" placeholder="Ex: Hôtel Riviera, Nice">
-
-  <div class="row2">
-    <div>
-      <label for="tripStart">Date de départ</label>
-      <input id="tripStart" type="date">
-    </div>
-    <div>
-      <label for="tripEnd">Date de retour</label>
-      <input id="tripEnd" type="date">
-    </div>
+<main>
+  <div class="chips" id="categoryChips">
+    <div class="chip active" data-cat="restaurant">🍽️ Restaurants</div>
+    <div class="chip" data-cat="randonnee">🥾 Randonnées</div>
+    <div class="chip" data-cat="balade">🚶 Balades</div>
   </div>
 
-  <button class="btn-primary" onclick="goToBudget()">Continuer</button>
-</div>
-
-<!-- VUE 2 : Budget -->
-<div id="viewBudget" class="view">
-  <div class="badge">Étape 2</div>
-  <h1>Quel est votre budget ?</h1>
-  <p class="sub">Ça nous permettra de ne vous suggérer que des activités, restaurants et sorties dans vos moyens.</p>
-
-  <label for="tripBudget">Budget total du séjour (€)</label>
-  <input id="tripBudget" type="number" placeholder="Ex: 800" inputmode="numeric">
-
-  <button class="btn-primary" onclick="saveTrip()">Enregistrer mon voyage</button>
-  <button class="btn-secondary" onclick="showView('viewTrip')">Retour</button>
-</div>
-
-<!-- VUE 3 : Récapitulatif -->
-<div id="viewSummary" class="view">
-  <div class="badge">Votre voyage</div>
-  <h1 id="summaryTitle">Récapitulatif</h1>
-  <p class="sub">Voici les informations enregistrées. Elles sont synchronisées et vous les retrouverez à chaque ouverture de l'app.</p>
-
-  <div class="card">
-    <div class="label">Départ</div>
-    <div class="value" id="sumDeparture">—</div>
-  </div>
-  <div class="card">
-    <div class="label">Lieu du séjour</div>
-    <div class="value" id="sumHotel">—</div>
-  </div>
-  <div class="card">
-    <div class="label">Dates</div>
-    <div class="value" id="sumDates">—</div>
-  </div>
-  <div class="card">
-    <div class="label">Budget</div>
-    <div class="value" id="sumBudget">—</div>
+  <div class="budget-row">
+    <label for="budgetInput">Budget max</label>
+    <input id="budgetInput" type="number" inputmode="numeric" placeholder="€ (optionnel)">
   </div>
 
-  <h2 style="margin-top:28px;">Suggestions pour vous</h2>
-  <div class="placeholder-box">
-    🍽️ 🥾 🎟️<br><br>
-    Les recommandations personnalisées (restaurants, randonnées, activités selon votre budget) arriveront ici à la prochaine étape de construction de l'app.
+  <div id="locationState" class="state-box">
+    📍 On a besoin de votre position pour vous montrer ce qu'il y a autour de vous.
+    <br><button id="btnLocate" onclick="requestLocation()">Activer ma position</button>
   </div>
 
-  <button class="btn-secondary" onclick="showView('viewTrip')">Modifier / nouveau voyage</button>
-</div>
+  <div id="map" style="display:none;"></div>
+
+  <div id="adviceCard" class="advice-card" style="display:none;">
+    <div class="advice-label">✨ Conseil</div>
+    <p id="adviceText">—</p>
+  </div>
+
+  <div id="listSection" style="display:none;">
+    <h2 class="section-title">À proximité</h2>
+    <div id="placeList" class="place-list"></div>
+  </div>
+</main>
+
+<!-- Leaflet (carte) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <!-- Firebase (SDK compat, chargé via balise script — pas besoin de npm) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -197,7 +185,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
 
 <script>
-const APP_VERSION = "0.1.0";
+const APP_VERSION = "0.2.0";
 
 // ---- Config Firebase (projet "odyssai") ----
 const firebaseConfig = {
@@ -211,113 +199,221 @@ const firebaseConfig = {
 
 let _rtdb = null;
 let _firebaseAuthReady = false;
-let currentTripId = null;
+let map = null;
+let userMarker = null;
+let placeMarkers = [];
+let userLat = null, userLng = null;
+let currentCategory = 'restaurant';
+
+const CATEGORY_CONFIG = {
+  restaurant: { icon:'🍽️', label:'Restaurant', radius:1500, query:'node["amenity"="restaurant"]' },
+  randonnee:  { icon:'🥾', label:'Randonnée',  radius:5000, query:'node["tourism"="viewpoint"];node["natural"="peak"]' },
+  balade:     { icon:'🚶', label:'Balade',     radius:2500, query:'node["leisure"="park"];node["tourism"="attraction"]' }
+};
 
 function showSyncBanner(text, type){
   const el = document.getElementById('syncBanner');
   el.textContent = text;
   el.className = 'sync-banner show' + (type ? ' ' + type : '');
-  if(type === 'ok'){
-    setTimeout(() => { el.classList.remove('show'); }, 2000);
-  }
+  if(type === 'ok'){ setTimeout(() => { el.classList.remove('show'); }, 2000); }
 }
 
 function initFirebaseSecurity(){
   firebase.initializeApp(firebaseConfig);
   firebase.auth().signInAnonymously().then(() => {
     _firebaseAuthReady = true;
-    initRTDB();
+    _rtdb = firebase.database();
+    loadLastPrefs();
   }).catch((err) => {
     console.error("Auth error:", err);
-    showSyncBanner("Connexion impossible — vérifiez votre réseau", "err");
-    trySplashDismiss();
   });
 }
 
-function initRTDB(){
-  _rtdb = firebase.database();
-  loadLastTrip();
+function loadLastPrefs(){
+  if(!_rtdb) return;
+  _rtdb.ref('prefs/lastCategory').once('value').then((snap) => {
+    const val = snap.val();
+    if(val && CATEGORY_CONFIG[val]) selectCategory(val, false);
+  });
+  _rtdb.ref('prefs/lastBudget').once('value').then((snap) => {
+    const val = snap.val();
+    if(val) document.getElementById('budgetInput').value = val;
+  });
 }
 
-function showView(id){
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function savePrefs(){
+  if(!_rtdb) return;
+  _rtdb.ref('prefs/lastCategory').set(currentCategory);
+  _rtdb.ref('prefs/lastBudget').set(Number(document.getElementById('budgetInput').value) || null);
 }
 
-function goToBudget(){
-  if(!document.getElementById('tripDeparture').value || !document.getElementById('tripHotel').value){
-    alert("Merci de renseigner au moins la ville de départ et le lieu du séjour.");
+// ---- Géolocalisation ----
+function requestLocation(){
+  if(!navigator.geolocation){
+    document.getElementById('locationState').innerHTML = "❌ Votre navigateur ne supporte pas la géolocalisation.";
     return;
   }
-  showView('viewBudget');
+  document.getElementById('locationState').innerHTML = "📍 Recherche de votre position...";
+  navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, {
+    enableHighAccuracy:true, timeout:12000, maximumAge:60000
+  });
 }
 
-function saveTrip(){
-  if(!_rtdb){
-    showSyncBanner("Pas encore connecté, réessayez dans un instant", "err");
-    return;
-  }
-  const trip = {
-    departure: document.getElementById('tripDeparture').value.trim(),
-    hotel: document.getElementById('tripHotel').value.trim(),
-    startDate: document.getElementById('tripStart').value,
-    endDate: document.getElementById('tripEnd').value,
-    budget: Number(document.getElementById('tripBudget').value) || 0,
-    updatedAt: Date.now()
-  };
+function onLocationError(err){
+  console.error(err);
+  document.getElementById('locationState').innerHTML =
+    "⚠️ Impossible d'accéder à votre position (" + (err.message || "erreur") + ").<br>" +
+    "Vérifiez que la localisation est autorisée pour ce site.<br>" +
+    '<button onclick="requestLocation()">Réessayer</button>';
+}
 
-  showSyncBanner("Enregistrement...", "");
+function onLocationSuccess(pos){
+  userLat = pos.coords.latitude;
+  userLng = pos.coords.longitude;
+  document.getElementById('locationState').style.display = 'none';
+  document.getElementById('map').style.display = 'block';
+  initMap();
+  fetchNearbyPlaces();
+}
 
-  const ref = currentTripId
-    ? _rtdb.ref('trips/' + currentTripId)
-    : _rtdb.ref('trips').push();
+function initMap(){
+  if(map) { map.setView([userLat, userLng], 14); updateUserMarker(); return; }
+  map = L.map('map', { zoomControl:false }).setView([userLat, userLng], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© OpenStreetMap'
+  }).addTo(map);
+  updateUserMarker();
+}
 
-  currentTripId = ref.key;
+function updateUserMarker(){
+  if(userMarker) map.removeLayer(userMarker);
+  userMarker = L.circleMarker([userLat, userLng], {
+    radius:8, color:'#4A7DFF', fillColor:'#4A7DFF', fillOpacity:1, weight:3
+  }).addTo(map);
+}
 
-  ref.set(trip).then(() => {
-    showSyncBanner("Voyage enregistré ✓", "ok");
-    renderSummary(trip);
-    showView('viewSummary');
-  }).catch((err) => {
+// ---- Catégories ----
+document.getElementById('categoryChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  selectCategory(chip.dataset.cat, true);
+});
+
+function selectCategory(cat, refetch){
+  currentCategory = cat;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.cat === cat);
+  });
+  if(refetch && userLat){ fetchNearbyPlaces(); savePrefs(); }
+}
+
+document.getElementById('budgetInput').addEventListener('change', () => {
+  savePrefs();
+  renderAdvice(window._lastPlaces || []);
+});
+
+// ---- Overpass : lieux à proximité ----
+function haversine(lat1, lon1, lat2, lon2){
+  const R = 6371000;
+  const toRad = (d) => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function fetchNearbyPlaces(){
+  const cfg = CATEGORY_CONFIG[currentCategory];
+  document.getElementById('listSection').style.display = 'block';
+  document.getElementById('placeList').innerHTML = '<div class="state-box">Recherche des lieux à proximité...</div>';
+
+  const parts = cfg.query.split(';').filter(Boolean).map(q => `${q}(around:${cfg.radius},${userLat},${userLng});`).join('');
+  const overpassQuery = `[out:json][timeout:25];(${parts});out body 40;`;
+
+  fetch('https://overpass-api.de/api/interpreter', {
+    method:'POST',
+    body:'data=' + encodeURIComponent(overpassQuery)
+  })
+  .then(r => r.json())
+  .then(data => {
+    const places = (data.elements || [])
+      .filter(el => el.tags && el.tags.name)
+      .map(el => ({
+        name: el.tags.name,
+        lat: el.lat, lng: el.lon,
+        distance: haversine(userLat, userLng, el.lat, el.lon)
+      }))
+      .sort((a,b) => a.distance - b.distance)
+      .slice(0, 15);
+
+    window._lastPlaces = places;
+    renderMarkers(places);
+    renderPlaceList(places);
+    renderAdvice(places);
+  })
+  .catch(err => {
     console.error(err);
-    showSyncBanner("Échec de l'enregistrement", "err");
+    document.getElementById('placeList').innerHTML =
+      '<div class="state-box">⚠️ Impossible de charger les lieux à proximité. Vérifiez votre connexion et réessayez.</div>';
   });
 }
 
-function loadLastTrip(){
-  _rtdb.ref('trips').limitToLast(1).once('value').then((snap) => {
-    const data = snap.val();
-    if(!data){ trySplashDismiss(); return; }
-    const key = Object.keys(data)[0];
-    const trip = data[key];
-    currentTripId = key;
-
-    document.getElementById('tripDeparture').value = trip.departure || '';
-    document.getElementById('tripHotel').value = trip.hotel || '';
-    document.getElementById('tripStart').value = trip.startDate || '';
-    document.getElementById('tripEnd').value = trip.endDate || '';
-    document.getElementById('tripBudget').value = trip.budget || '';
-
-    renderSummary(trip);
-    showView('viewSummary');
-    trySplashDismiss();
-  }).catch(() => { trySplashDismiss(); });
+function renderMarkers(places){
+  placeMarkers.forEach(m => map.removeLayer(m));
+  placeMarkers = [];
+  places.forEach(p => {
+    const marker = L.marker([p.lat, p.lng]).addTo(map).bindPopup(p.name);
+    placeMarkers.push(marker);
+  });
 }
 
-function renderSummary(trip){
-  document.getElementById('sumDeparture').textContent = trip.departure || '—';
-  document.getElementById('sumHotel').textContent = trip.hotel || '—';
-  const dates = (trip.startDate && trip.endDate)
-    ? formatDate(trip.startDate) + ' → ' + formatDate(trip.endDate)
-    : '—';
-  document.getElementById('sumDates').textContent = dates;
-  document.getElementById('sumBudget').textContent = trip.budget ? trip.budget + ' €' : '—';
+function renderPlaceList(places){
+  const cfg = CATEGORY_CONFIG[currentCategory];
+  const container = document.getElementById('placeList');
+  if(places.length === 0){
+    container.innerHTML = '<div class="state-box">Rien trouvé à proximité pour cette catégorie. Essayez-en une autre.</div>';
+    return;
+  }
+  container.innerHTML = places.map((p, i) => `
+    <div class="place-card">
+      <div class="place-thumb">${cfg.icon}</div>
+      <div class="place-info">
+        <div class="place-name">${escapeHtml(p.name)}</div>
+        <div class="place-meta">${formatDistance(p.distance)} · ${cfg.label}</div>
+        ${i === 0 ? '<div class="place-best">Le plus proche</div>' : ''}
+      </div>
+    </div>
+  `).join('');
 }
 
-function formatDate(iso){
-  if(!iso) return '';
-  const [y,m,d] = iso.split('-');
-  return `${d}/${m}/${y}`;
+function renderAdvice(places){
+  const cfg = CATEGORY_CONFIG[currentCategory];
+  const budget = Number(document.getElementById('budgetInput').value) || 0;
+  const card = document.getElementById('adviceCard');
+  const text = document.getElementById('adviceText');
+
+  if(!places || places.length === 0){
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  const top = places[0];
+  let msg = `${places.length} ${cfg.label.toLowerCase()}${places.length>1?'s':''} trouvé${places.length>1?'s':''} près de vous. ` +
+            `Le plus proche est "${top.name}", à ${formatDistance(top.distance)}.`;
+  if(budget > 0){
+    msg += ` Avec un budget de ${budget} €, vous devriez avoir de quoi couvrir la plupart des options à proximité.`;
+  }
+  text.textContent = msg;
+}
+
+function formatDistance(m){
+  return m < 1000 ? Math.round(m) + ' m' : (m/1000).toFixed(1) + ' km';
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 // ---- Service worker (mise à jour manuelle uniquement, jamais automatique) ----
@@ -333,10 +429,7 @@ function hideSplash(){
   splash.style.display = 'none'; // coupure nette, aucun fondu à la sortie
 }
 
-// Le splash s'efface dès que l'app est prête (données Firebase chargées),
-// avec une durée minimum pour laisser le temps au fondu d'entrée de se voir.
-// Un appui sur l'écran permet aussi de passer directement à l'app.
-const SPLASH_MIN_MS = 6000;
+const SPLASH_MIN_MS = 10000;
 const splashStart = Date.now();
 let appReady = false;
 
@@ -347,13 +440,11 @@ function trySplashDismiss(){
   setTimeout(hideSplash, wait);
 }
 
-// Filet de sécurité : si la connexion Firebase est lente ou échoue,
-// on ne laisse jamais l'utilisateur bloqué derrière le splash.
-setTimeout(() => { if(!appReady) hideSplash(); }, 6500);
-
+setTimeout(() => { if(!appReady) hideSplash(); }, 10500);
 document.getElementById('splashScreen').addEventListener('click', hideSplash);
 
 initFirebaseSecurity();
+setTimeout(trySplashDismiss, 800); // l'app (chips/carte) est utilisable très vite, indépendamment de Firebase
 </script>
 </body>
 </html>

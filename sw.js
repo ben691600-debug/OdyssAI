@@ -1,5 +1,5 @@
-const APP_VERSION = "0.1.0";
-const CACHE_NAME = "odyssai-v010";
+const APP_VERSION = "0.2.0";
+const CACHE_NAME = "odyssai-v020";
 const APP_SHELL = [
   "./",
   "./index.html",

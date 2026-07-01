@@ -1,0 +1,204 @@
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#050b1f;
+  color:white;
+}
+.screen{
+  display:none;
+  min-height:100vh;
+  padding:24px;
+  max-width:430px;
+  margin:auto;
+}
+.screen.active{display:block}
+
+#splash{
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+#splash.active{display:flex;flex-direction:column}
+
+.splash-logo{
+  position:relative;
+  width:290px;
+  height:290px;
+  margin-bottom:26px;
+}
+.moon{
+  position:absolute;
+  inset:25px;
+  border:11px solid #27b7ff;
+  border-right-color:#8757ff;
+  border-bottom-color:transparent;
+  border-radius:50%;
+  opacity:0;
+  animation:drawMoon 1.2s ease forwards 3.3s;
+}
+.boat{
+  position:absolute;
+  left:-70px;
+  top:118px;
+  font-size:72px;
+  filter:drop-shadow(0 0 16px #28bfff);
+  animation:boatMove 2.3s ease forwards .7s, float 2s ease-in-out infinite 3s;
+}
+.plane{
+  position:absolute;
+  right:18px;
+  top:42px;
+  font-size:42px;
+  color:#45c4ff;
+  opacity:0;
+  transform:translate(-90px,90px) rotate(-20deg);
+  animation:planeMove 1s ease forwards 4.5s;
+}
+.tech-sea{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:55px;
+  height:85px;
+  opacity:0;
+  animation:seaAppear 1.4s ease forwards 2.2s;
+}
+.tech-sea span{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:20px;
+  border-top:3px solid #138dff;
+  border-radius:50%;
+  filter:drop-shadow(0 0 8px #18cfff);
+}
+.tech-sea span:nth-child(1){top:0}
+.tech-sea span:nth-child(2){top:16px;border-color:#16c6ff}
+.tech-sea span:nth-child(3){top:32px;border-color:#4a7bff}
+.tech-sea span:nth-child(4){top:48px;border-color:#7b4dff}
+.tech-sea span:nth-child(5){top:64px;border-color:#1bc8ff}
+
+h1{
+  font-size:54px;
+  margin:0;
+  letter-spacing:.5px;
+  opacity:0;
+  animation:fadeUp .8s ease forwards 5.2s;
+}
+h1 span{color:#518cff}
+#splash p{
+  opacity:0;
+  animation:fadeUp .8s ease forwards 5.55s;
+  color:#c9d5ff;
+  letter-spacing:1px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:28px;
+}
+header h2{font-size:32px;margin:0 0 6px}
+header p{margin:0;color:#b9c5e8;font-size:16px;line-height:1.4}
+.ai-orb{
+  min-width:62px;height:62px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#13c8ff,#8257ff);
+  box-shadow:0 0 24px #1c9eff;
+  font-weight:bold;
+}
+main h3{font-size:28px;margin:18px 0}
+
+.big-card{
+  width:100%;
+  min-height:82px;
+  margin:10px 0;
+  border:1px solid #1e315f;
+  border-radius:24px;
+  background:#0b1533;
+  color:white;
+  text-align:left;
+  font-size:31px;
+  padding:16px 18px;
+}
+.big-card span{
+  display:inline-block;
+  margin-left:10px;
+  font-size:23px;
+  font-weight:bold;
+}
+.big-card small{
+  display:block;
+  margin-left:58px;
+  margin-top:4px;
+  color:#aebde7;
+  font-size:15px;
+}
+.primary{
+  width:100%;
+  height:68px;
+  margin-top:22px;
+  border:0;
+  border-radius:24px;
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+  background:linear-gradient(135deg,#0bbcff,#7558ff);
+  box-shadow:0 8px 28px #0b7dff66;
+}
+.budget{
+  background:#102044;
+  border-radius:20px;
+  padding:12px 14px;
+  font-size:24px;
+  font-weight:bold;
+}
+.budget small{display:block;font-size:12px;color:#b8c4e7;font-weight:normal}
+.status-card{
+  padding:18px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#0b1d46,#182459);
+  border:1px solid #25427d;
+  margin-bottom:24px;
+}
+.status-card p{color:#cbd7ff;line-height:1.4}
+.timeline div{
+  display:grid;
+  grid-template-columns:70px 1fr;
+  gap:4px 10px;
+  padding:16px 0;
+  border-bottom:1px solid #1b2c55;
+}
+.timeline b{color:#55c7ff}
+.timeline span{font-size:19px;font-weight:bold}
+.timeline small{grid-column:2;color:#b5c1df}
+nav{
+  position:fixed;
+  left:50%;
+  bottom:16px;
+  transform:translateX(-50%);
+  width:min(390px,calc(100% - 32px));
+  background:#08122d;
+  border:1px solid #1d315e;
+  border-radius:24px;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+}
+nav button{
+  background:transparent;
+  border:0;
+  color:white;
+  font-size:24px;
+}
+nav small{display:block;font-size:11px;color:#b8c4e7}
+
+@keyframes boatMove{to{left:95px}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@keyframes seaAppear{to{opacity:1}}
+@keyframes drawMoon{from{opacity:0;transform:rotate(-130deg) scale(.7)}to{opacity:1;transform:rotate(0) scale(1)}}
+@keyframes planeMove{to{opacity:1;transform:translate(0,0) rotate(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}

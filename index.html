@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OdyssAI - Prototype</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section id="splash" class="screen active">
+    <div class="splash-logo">
+      <div class="moon"></div>
+      <div class="plane">✈</div>
+      <div class="boat">⛵</div>
+      <div class="tech-sea">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <h1>Odyss<span>AI</span></h1>
+    <p>Votre voyage, optimisé par l’IA</p>
+  </section>
+
+  <section id="home" class="screen">
+    <header>
+      <div>
+        <h2>Bonjour 👋</h2>
+        <p>L’IA prépare votre voyage selon votre budget.</p>
+      </div>
+      <div class="ai-orb">AI</div>
+    </header>
+
+    <main>
+      <h3>Où souhaitez-vous voyager ?</h3>
+
+      <button class="big-card">📍 <span>Destination</span><small>Choisir une ville</small></button>
+      <button class="big-card">📅 <span>Dates</span><small>Début et fin du voyage</small></button>
+      <button class="big-card">👥 <span>Voyageurs</span><small>Adultes, enfants, groupe</small></button>
+      <button class="big-card">💶 <span>Budget</span><small>Montant total disponible</small></button>
+
+      <button class="primary" onclick="showDashboard()">✨ Créer mon voyage</button>
+    </main>
+  </section>
+
+  <section id="dashboard" class="screen">
+    <header>
+      <div>
+        <h2>Venise 🇮🇹</h2>
+        <p>10–11 juillet · 2 voyageurs</p>
+      </div>
+      <div class="budget">742 €<small>restants</small></div>
+    </header>
+
+    <main>
+      <div class="status-card">
+        <strong>✨ OdyssAI conseille</strong>
+        <p>Commencez par la Place Saint-Marc à 9h30 pour éviter la foule.</p>
+      </div>
+
+      <h3>Votre journée</h3>
+      <div class="timeline">
+        <div><b>09:30</b><span>🚶 Place Saint-Marc</span><small>Gratuit · 18 min</small></div>
+        <div><b>12:30</b><span>🍝 Restaurant bien noté</span><small>28 €/pers · Réserver</small></div>
+        <div><b>15:00</b><span>🚤 Balade en gondole</span><small>80 € · 35 min</small></div>
+        <div><b>19:30</b><span>🌅 Dîner près du canal</span><small>42 €/pers</small></div>
+      </div>
+
+      <nav>
+        <button>🏠<small>Accueil</small></button>
+        <button>🗺<small>Voyage</small></button>
+        <button>💶<small>Budget</small></button>
+        <button>👤<small>Profil</small></button>
+      </nav>
+    </main>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

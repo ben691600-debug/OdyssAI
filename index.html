@@ -92,15 +92,17 @@
   .sync-banner.ok{ color:var(--success); }
   .sync-banner.err{ color:var(--danger); }
 
-  /* ---- Splash screen : simple fondu à l'entrée, coupure nette à la sortie ---- */
+  /* ---- Splash screen : logo rond sur fond blanc, fondu lent ---- */
   #splashScreen{
-    position:fixed; inset:0; z-index:999; background:#0B0F2A;
+    position:fixed; inset:0; z-index:999; background:#FFFFFF;
     display:flex; align-items:center; justify-content:center;
   }
   #splashScreen img{
-    width:78%; max-width:420px; display:block;
+    width:56%; max-width:280px; aspect-ratio:1/1;
+    display:block; border-radius:50%; object-fit:cover;
+    box-shadow:0 10px 40px rgba(11,15,42,.18);
     opacity:0;
-    animation:splashFadeIn .9s ease forwards;
+    animation:splashFadeIn 2.5s ease forwards;
   }
   @keyframes splashFadeIn{ to{ opacity:1; } }
 </style>
@@ -108,7 +110,7 @@
 <body>
 
 <div id="splashScreen">
-  <img src="./icons/splash-logo.png" alt="OdyssAI">
+  <img src="./icons/icon-512.png" alt="OdyssAI">
 </div>
 
 <div id="syncBanner" class="sync-banner"></div>
@@ -334,7 +336,7 @@ function hideSplash(){
 // Le splash s'efface dès que l'app est prête (données Firebase chargées),
 // avec une durée minimum pour laisser le temps au fondu d'entrée de se voir.
 // Un appui sur l'écran permet aussi de passer directement à l'app.
-const SPLASH_MIN_MS = 1400;
+const SPLASH_MIN_MS = 6000;
 const splashStart = Date.now();
 let appReady = false;
 
@@ -347,7 +349,7 @@ function trySplashDismiss(){
 
 // Filet de sécurité : si la connexion Firebase est lente ou échoue,
 // on ne laisse jamais l'utilisateur bloqué derrière le splash.
-setTimeout(() => { if(!appReady) hideSplash(); }, 5000);
+setTimeout(() => { if(!appReady) hideSplash(); }, 6500);
 
 document.getElementById('splashScreen').addEventListener('click', hideSplash);
 

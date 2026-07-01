@@ -1,19 +1,21 @@
-# OdyssAI Visual Prototype
+# OdyssAI App Animation v2
 
-Prototype visuel HTML/CSS/JS pour tester :
-- l'animation de lancement du logo,
-- l'écran d'accueil accessible,
-- un premier tableau de bord voyage.
+Animation de lancement en Canvas, pensée pour GitHub Pages et mobile.
 
-## Utilisation locale
+## Installation GitHub
+1. Dézipper le dossier.
+2. Envoyer `index.html`, `style.css`, `script.js` et `README.md` à la racine du dépôt.
+3. Dans GitHub : Settings > Pages > Deploy from branch > main > root.
+4. Attendre 1 à 2 minutes puis ouvrir le lien GitHub Pages.
 
-Ouvrir `index.html` dans un navigateur.
-
-## GitHub Pages
-
-1. Créer un dépôt GitHub.
-2. Envoyer les fichiers `index.html`, `style.css`, `script.js`, `README.md`.
-3. Activer GitHub Pages dans Settings > Pages.
-4. Choisir la branche `main` et le dossier `/root`.
-
-Ce prototype est volontairement simple pour être modifié étape par étape.
+Cette version suit la timeline :
+1. lueur à l'horizon,
+2. horizon éclairé,
+3. bateau,
+4. vagues lumineuses,
+5. mer technologique,
+6. lune,
+7. avion,
+8. trajectoire,
+9. logo OdyssAI,
+10. menu basique.

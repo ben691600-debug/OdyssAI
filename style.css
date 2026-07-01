@@ -3,82 +3,165 @@ html,body{
   margin:0;
   width:100%;
   height:100%;
+  background:#050817;
   overflow:hidden;
-  background:#030713;
   font-family:Arial, Helvetica, sans-serif;
-}
-#app{
-  width:100vw;
-  height:100vh;
-  background:#030713;
 }
 #splash,#home{
   position:fixed;
   inset:0;
 }
 #splash{
-  opacity:1;
-  transition:opacity .8s ease;
-  background:#030713;
-}
-#splash.hidden{
-  opacity:0;
-  pointer-events:none;
-}
-#odyssaiCanvas{
-  width:100%;
-  height:100%;
-  display:block;
-}
-#home{
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:28px;
   color:white;
   background:
-    radial-gradient(circle at 50% 30%,rgba(25,190,255,.18),transparent 28%),
-    linear-gradient(180deg,#071126,#030713);
+    radial-gradient(circle at 50% 48%, rgba(16,180,255,.14), transparent 33%),
+    linear-gradient(180deg,#091229 0%,#030715 100%);
+  transition:opacity .9s ease;
+}
+#splash.hide{opacity:0;pointer-events:none}
+
+.logo-stage{
+  position:relative;
+  width:min(88vw,520px);
+  aspect-ratio:1/1;
+  overflow:hidden;
+  border-radius:24px;
+  transform:scale(.92);
+  animation:stageIn 1s ease forwards, stageBreath 4s ease-in-out infinite 5s;
+}
+.logo-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Fond très discret */
+.base{
   opacity:0;
-  transform:scale(1.02);
-  transition:opacity .9s ease, transform .9s ease;
+  filter:blur(10px) brightness(.55);
+  animation:baseIn 1.2s ease forwards;
 }
-#home.visible{
-  opacity:1;
-  transform:scale(1);
+
+/* Bateau */
+.boat{
+  opacity:0;
+  clip-path:polygon(30% 31%, 68% 31%, 70% 68%, 25% 68%);
+  transform:translateX(-22%) translateY(4%);
+  animation:boatIn 1.7s cubic-bezier(.18,.9,.22,1) forwards 1s,
+            boatFloat 2.4s ease-in-out infinite 2.8s;
 }
-.home-card{
-  width:min(390px,100%);
-  text-align:center;
-  background:rgba(8,18,45,.84);
-  border:1px solid rgba(75,150,255,.3);
-  border-radius:34px;
-  padding:34px 22px;
-  box-shadow:0 24px 70px rgba(0,0,0,.35);
+
+/* Mer technologique */
+.sea{
+  opacity:0;
+  clip-path:polygon(17% 56%, 99% 48%, 100% 100%, 25% 100%, 15% 80%);
+  transform:translateY(9%);
+  filter:drop-shadow(0 0 18px #16caff);
+  animation:seaIn 1.55s ease forwards 2.55s, seaMove 4s ease-in-out infinite 4.2s;
 }
-.mini-logo{
-  font-size:46px;
-  font-weight:500;
-  letter-spacing:-1px;
+
+/* Arc lune */
+.arc{
+  opacity:0;
+  clip-path:polygon(15% 0%, 83% 0%, 73% 45%, 20% 76%, 0% 55%, 0% 0%);
+  transform:rotate(-18deg) scale(.92);
+  transform-origin:44% 47%;
+  filter:drop-shadow(0 0 20px #238cff);
+  animation:arcIn 1.15s ease forwards 4.15s;
 }
-.mini-logo span{
-  background:linear-gradient(135deg,#10c9ff,#8c58ff);
+
+/* Avion + trajectoire */
+.plane{
+  opacity:0;
+  clip-path:polygon(66% 2%, 100% 0%, 100% 56%, 67% 59%, 55% 29%);
+  transform:translate(-18%,16%) scale(.94);
+  filter:drop-shadow(0 0 20px #45caff);
+  animation:planeIn 1.05s ease forwards 5.15s;
+}
+
+.shine{
+  position:absolute;
+  left:-30%;
+  top:55%;
+  width:38%;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#20d7ff,transparent);
+  box-shadow:0 0 28px #20d7ff;
+  opacity:0;
+  animation:shine 1.4s ease forwards .25s;
+}
+
+h1{
+  margin:8px 0 0;
+  font-size:56px;
+  line-height:1;
+  color:white;
+  opacity:0;
+  transform:translateY(18px);
+  animation:textIn .8s ease forwards 6.25s;
+}
+h1 span{
+  background:linear-gradient(135deg,#13caff,#805cff);
   -webkit-background-clip:text;
   color:transparent;
 }
-.home-card p{
-  margin:14px 0 28px;
-  color:#c7d4ff;
-  font-size:18px;
+#splash p{
+  margin:14px 0 0;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#d7e3ff;
+  opacity:0;
+  transform:translateY(12px);
+  animation:textIn .8s ease forwards 6.55s;
 }
+
+#home{
+  opacity:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  padding:28px;
+  text-align:center;
+  background:linear-gradient(180deg,#081229,#030715);
+  transition:opacity .9s ease;
+}
+#home.show{opacity:1}
+#home h2{font-size:48px;margin:0 0 10px}
+#home h2 span{
+  background:linear-gradient(135deg,#13caff,#805cff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+#home p{max-width:360px;color:#bec9e9;font-size:18px;line-height:1.45}
 button{
-  width:100%;
+  margin-top:22px;
+  width:min(360px,100%);
   height:66px;
   border:0;
   border-radius:24px;
+  background:linear-gradient(135deg,#0ac0ff,#745cff);
   color:white;
-  font-weight:700;
-  font-size:20px;
-  background:linear-gradient(135deg,#08bdff,#7657ff);
-  box-shadow:0 12px 34px rgba(18,129,255,.35);
+  font-size:21px;
+  font-weight:bold;
 }
+
+@keyframes stageIn{to{transform:scale(1)}}
+@keyframes stageBreath{50%{transform:scale(1.015)}}
+@keyframes baseIn{to{opacity:.18}}
+@keyframes boatIn{to{opacity:1;transform:translateX(0) translateY(0)}}
+@keyframes boatFloat{50%{transform:translateY(-8px)}}
+@keyframes seaIn{to{opacity:1;transform:translateY(0)}}
+@keyframes seaMove{50%{transform:translateY(-5px)}}
+@keyframes arcIn{to{opacity:1;transform:rotate(0deg) scale(1)}}
+@keyframes planeIn{to{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes shine{0%{opacity:0;left:-30%}30%{opacity:1}100%{opacity:0;left:90%}}
+@keyframes textIn{to{opacity:1;transform:translateY(0)}}

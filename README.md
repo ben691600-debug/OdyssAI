@@ -1,21 +1,13 @@
-# OdyssAI App Animation v2
+# OdyssAI Test Logo Animation
 
-Animation de lancement en Canvas, pensée pour GitHub Pages et mobile.
+Version test utilisant directement l'image du logo générée.
 
-## Installation GitHub
-1. Dézipper le dossier.
-2. Envoyer `index.html`, `style.css`, `script.js` et `README.md` à la racine du dépôt.
-3. Dans GitHub : Settings > Pages > Deploy from branch > main > root.
-4. Attendre 1 à 2 minutes puis ouvrir le lien GitHub Pages.
+## GitHub
+Envoyer à la racine du dépôt :
+- index.html
+- style.css
+- script.js
+- odyssai-logo.png
+- README.md
 
-Cette version suit la timeline :
-1. lueur à l'horizon,
-2. horizon éclairé,
-3. bateau,
-4. vagues lumineuses,
-5. mer technologique,
-6. lune,
-7. avion,
-8. trajectoire,
-9. logo OdyssAI,
-10. menu basique.
+Puis activer GitHub Pages : Settings > Pages > Deploy from branch > main > root.
